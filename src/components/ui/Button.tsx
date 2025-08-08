@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, Text, PressableProps, Platform } from "react-native";
+import { Pressable, Text, PressableProps } from "react-native";
 import { cn } from "../../lib/cn";
 import { tokens } from "../../theme/tokens";
 

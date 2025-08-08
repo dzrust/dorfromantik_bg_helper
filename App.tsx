@@ -7,16 +7,12 @@
 
 import "./global.css";
 import { useColorScheme, View } from "react-native";
-import { Label } from "./src";
+import CampaignList from "./src/pages/CampaignList";
 
 function App() {
   const isDarkMode = useColorScheme() === "dark";
 
-  return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <Label>Welcome to Nativewind!</Label>
-    </View>
-  );
+  return <CampaignList />;
 }
 
 export default App;
