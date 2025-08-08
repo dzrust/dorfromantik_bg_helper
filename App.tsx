@@ -5,25 +5,18 @@
  * @format
  */
 
-import { StyleSheet, Text, useColorScheme, View } from 'react-native';
 import "./global.css";
+import { useColorScheme, View } from "react-native";
+import { Label } from "./src";
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = useColorScheme() === "dark";
 
   return (
     <View className="flex-1 items-center justify-center bg-white">
-      <Text className="text-xl font-bold text-blue-500">
-        Welcome to Nativewind!
-      </Text>
+      <Label>Welcome to Nativewind!</Label>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
