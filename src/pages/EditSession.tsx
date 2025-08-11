@@ -1,6 +1,7 @@
 import { Card, CardTitle, CardSection } from "../components/ui/Card";
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
+import { Button } from "../components/ui/Button";
 
 export default function EditSession({ route, navigation }: any) {
   const { id } = route.params;
@@ -11,7 +12,7 @@ export default function EditSession({ route, navigation }: any) {
         <CardSection>
           <Text>Allow editing tiles & scores here</Text>
         </CardSection>
-        <Pressable onPress={() => navigation.goBack()}>Done</Pressable>
+        <Button onPress={() => navigation.goBack()}>Done</Button>
       </Card>
     </View>
   );

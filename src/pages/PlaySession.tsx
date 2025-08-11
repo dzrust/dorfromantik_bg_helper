@@ -1,7 +1,8 @@
+import { Button } from "../components/ui/Button";
 import { Card, CardSection, CardTitle } from "../components/ui/Card";
 import { Select } from "../components/ui/Select";
 import React, { useState } from "react";
-import { View, Text, FlatList, Pressable } from "react-native";
+import { View, Text, FlatList } from "react-native";
 
 export default function PlaySession({ route, navigation }: any) {
   const { campaignId } = route.params;
@@ -19,7 +20,7 @@ export default function PlaySession({ route, navigation }: any) {
               <Text>
                 {item.type} {item.value}
               </Text>
-              <Pressable onPress={() => {}}>Complete</Pressable>
+              <Button onPress={() => {}}>Complete</Button>
             </CardSection>
           )}
         />
@@ -35,7 +36,7 @@ export default function PlaySession({ route, navigation }: any) {
           placeholder="Reveal Tile Type"
         />
       </Card>
-      <Pressable onPress={() => navigation.navigate("EndSession", { campaignId })}>End Session</Pressable>
+      <Button onPress={() => navigation.navigate("EndSession", { campaignId })}>End Session</Button>
     </View>
   );
 }

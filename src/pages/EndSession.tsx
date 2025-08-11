@@ -1,7 +1,8 @@
+import { Button } from "../components/ui/Button";
 import { Card, CardSection, CardTitle } from "../components/ui/Card";
 import { Input } from "../components/ui/Input";
 import React, { useState } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 
 export default function EndSession({ route, navigation }: any) {
   const { campaignId } = route.params;
@@ -19,7 +20,7 @@ export default function EndSession({ route, navigation }: any) {
           <Input placeholder="Longest Railroad" value={longest.railroad} onChangeText={(v) => setLongest({ ...longest, railroad: v })} />
           <Input placeholder="Longest River" value={longest.river} onChangeText={(v) => setLongest({ ...longest, river: v })} />
         </CardSection>
-        <Pressable onPress={() => navigation.navigate("CampaignDetail", { id: campaignId })}>Save</Pressable>
+        <Button onPress={() => navigation.navigate("CampaignDetail", { id: campaignId })}>Save</Button>
       </Card>
     </View>
   );
