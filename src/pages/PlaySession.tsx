@@ -1,10 +1,18 @@
+import { useNavigation } from "@react-navigation/native";
 import { Button } from "../components/ui/Button";
 import { Card, CardSection, CardTitle } from "../components/ui/Card";
 import { Select } from "../components/ui/Select";
 import React, { useState } from "react";
 import { View, Text, FlatList } from "react-native";
+import type { StaticScreenProps } from "@react-navigation/native";
+import { ROUTES } from "../models/route";
 
-export default function PlaySession({ route, navigation }: any) {
+type Props = StaticScreenProps<{
+  campaignId: string;
+}>;
+
+export default function PlaySession({ route }: Props) {
+  const navigation = useNavigation<any>();
   const { campaignId } = route.params;
   const [tilesInPlay, setTilesInPlay] = useState<any[]>([]);
 
@@ -36,7 +44,7 @@ export default function PlaySession({ route, navigation }: any) {
           placeholder="Reveal Tile Type"
         />
       </Card>
-      <Button onPress={() => navigation.navigate("EndSession", { campaignId })}>End Session</Button>
+      <Button onPress={() => navigation.navigate(ROUTES.SCORE, { campaignId })}>End Session</Button>
     </View>
   );
 }

@@ -6,13 +6,13 @@
  */
 
 import "./global.css";
-import { useColorScheme, View } from "react-native";
-import CampaignList from "./src/pages/CampaignList";
+import { useColorScheme } from "react-native";
+import { Navigation } from "./src/navigation";
 
 function App() {
   const isDarkMode = useColorScheme() === "dark";
 
-  return <CampaignList />;
+  return <Navigation />;
 }
 
 export default App;
