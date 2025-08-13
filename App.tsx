@@ -9,14 +9,17 @@ import "./global.css";
 import { useColorScheme } from "react-native";
 import { Navigation } from "./src/navigation";
 import { ToastProvider } from "./src";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 function App() {
   const isDarkMode = useColorScheme() === "dark";
 
   return (
-    <ToastProvider>
-      <Navigation />
-    </ToastProvider>
+    <SafeAreaProvider>
+      <ToastProvider>
+        <Navigation />
+      </ToastProvider>
+    </SafeAreaProvider>
   );
 }
 

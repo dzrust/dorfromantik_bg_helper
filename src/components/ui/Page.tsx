@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, ScrollView, ViewProps } from "react-native";
+import { ScrollView, View, ViewProps } from "react-native";
 import { cn } from "../../lib/cn";
 
 type Props = ViewProps & {
@@ -8,13 +8,13 @@ type Props = ViewProps & {
   className?: string;
 };
 
-export function Page({ children, scroll = true, className, ...p }: Props) {
-  const Wrapper: any = scroll ? ScrollView : React.Fragment;
-  const wrapperProps = scroll ? { contentContainerStyle: { flexGrow: 1 } } : {};
+export function Page({ children, scroll = false, className, ...p }: Props) {
+  const Wrapper: any = scroll ? ScrollView : View;
+  const scrollProps = scroll ? { contentContainerStyle: { flexGrow: 1 } } : {};
 
   return (
-    <SafeAreaView className={cn("flex-1 bg-neutral-50", className)} {...p}>
-      <Wrapper {...wrapperProps}>{children}</Wrapper>
-    </SafeAreaView>
+    <Wrapper className={cn("flex-1 bg-neutral-50 p-4", className)} {...scrollProps} {...p}>
+      {children}
+    </Wrapper>
   );
 }

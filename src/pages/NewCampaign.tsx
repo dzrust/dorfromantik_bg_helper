@@ -23,7 +23,7 @@ export default function NewCampaign() {
 
   const addPlayer = () => {
     const n = playerName.trim();
-    if (!n) return;
+    if (!n || players.length === 4) return;
     setPlayers((p) => [...p, { id: Math.random().toString(36).slice(2), name: n }]);
     setPlayerName("");
   };
@@ -79,9 +79,14 @@ export default function NewCampaign() {
           <Subtitle>Finally who all is playing?</Subtitle>
           <View className="flex-row gap-2">
             <View className="flex-1">
-              <Input placeholder="Player Name" value={playerName} onChangeText={setPlayerName} />
+              <Input
+                placeholder="Player Name"
+                value={playerName}
+                onChangeText={setPlayerName}
+                editable={players.length < 4}
+              />
             </View>
-            <Button className="flex-2" onPress={addPlayer}>
+            <Button className="flex-2" onPress={addPlayer} disabled={players.length === 4}>
               Add
             </Button>
           </View>
