@@ -19,6 +19,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Detects AI vs manual commits and prompts accordingly
   - Interactive confirmation for proceeding without changelog updates
   - Filters out documentation and configuration files
+- Comprehensive data model structure with TypeScript definitions:
+  - **Campaign model** with Yup validation schema
+    - Campaign name, start/end dates, player management
+    - Achievement tracking at campaign level
+    - Session collection with proper relationships
+  - **Player model** with validation for names and unique IDs
+  - **Achievement system** with enumerated keys and structured data
+  - **PlaySession model** for individual game sessions:
+    - Session indexing within campaigns
+    - Task tile pool management by tile type
+    - In-play vs completed tile tracking (max 3 in-play rule)
+    - Multi-section scoring system
+  - **TaskTile model** with 5 tile types (grain, city, railroad, river, forest)
+    - Tile values: 4, 5, 6, 7 with proper type constraints
+    - State management for in-play vs completed tiles
+  - **Scoring structure** with three distinct sections:
+    - Task tile value totals
+    - Flag scoring for grain/city/forest tiles
+    - Longest railroad/river tracking
+    - Achievement-based bonus points
+  - **Route definitions** for navigation structure
 
 ### Changed
 - Enhanced NewCampaign page with improved form handling:
