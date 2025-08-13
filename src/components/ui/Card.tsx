@@ -4,7 +4,7 @@ import { cn } from "../../lib/cn";
 import { tokens } from "../../theme/tokens";
 
 export function Card({ className, ...p }: ViewProps) {
-  return <View className={cn(tokens.radiusLg, tokens.surface, "p-4", tokens.shadow, className)} {...p} />;
+  return <View className={cn(tokens.radius, tokens.surface, "p-4", tokens.shadow, className)} {...p} />;
 }
 export function CardTitle({ children }: { children?: React.ReactNode }) {
   return <Text className="text-xl font-semibold text-black">{children}</Text>;
