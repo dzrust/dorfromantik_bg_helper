@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Migrated from React Native CLI to Expo
+  - Updated package.json to use Expo SDK and dependencies
+  - Configured app.json with Expo-specific settings
+  - Updated scripts to use Expo commands (start, ios, android, web)
+  - Enabled new architecture and edge-to-edge Android support
+
 ### Added
 - FormInput UI component that integrates directly with Formik context
   - Automatic error display using ErrorMessage component
