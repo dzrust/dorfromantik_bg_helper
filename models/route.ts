@@ -1,8 +1,8 @@
 export enum ROUTES {
-  HOME = "Home",
-  NEW = "New",
-  DETAILS = "Details",
-  SESSION = "Session",
-  EDIT_SESSION = "EditSession",
-  SCORE = "Score",
+  HOME = "/",
+  NEW = "/campaign/create",
+  DETAILS = "/campaign/[campaignId]",
+  SESSION = "/session/[sessionId]/play",
+  EDIT_SESSION = "/session/[sessionId]/edit",
+  SCORE = "/session/[sessionId]/score",
 }

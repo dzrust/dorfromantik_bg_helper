@@ -8,11 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Migrated from React Native CLI to Expo
-  - Updated package.json to use Expo SDK and dependencies
-  - Configured app.json with Expo-specific settings
-  - Updated scripts to use Expo commands (start, ios, android, web)
-  - Enabled new architecture and edge-to-edge Android support
+- **BREAKING: Complete migration from React Native CLI to Expo** 
+  - Migrated from React Native 0.80.2 to Expo SDK 53 with React Native 0.79.5
+  - Updated package.json dependencies to use Expo-managed packages
+  - Replaced React Navigation with Expo Router for file-based routing
+  - Updated Babel configuration to use babel-preset-expo with NativeWind support
+  - Updated Metro configuration to use Expo's metro config
+  - Configured app.json with Expo-specific settings including new architecture support
+  - Updated all npm scripts to use Expo CLI commands (start, ios, android, web, lint)
+  - Added support for web platform with static output bundling
+  - Enabled edge-to-edge Android support and automatic interface style
+  - Integrated GlueStack UI component library for enhanced UI components
+  - Added comprehensive UI component system:
+    - Button, Input, Select, Avatar, Toast, and other core components
+    - Form control components with proper validation integration
+    - Motion animations support via @legendapp/motion
+  - Restructured project to use app directory routing pattern
+  - Moved from src/pages to app/ directory structure for screens
+  - Updated navigation system to use Expo Router file-based routing
+  - Enhanced TypeScript configuration for better type safety
+  - Added react-native-css-interop for improved styling capabilities
+  - Integrated @react-native-community/datetimepicker for native date picking
+  - Added SVG support via react-native-svg
+  - Configured environment variable support with DARK_MODE=media
 
 ### Added
 - FormInput UI component that integrates directly with Formik context

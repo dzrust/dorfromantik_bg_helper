@@ -1,19 +1,19 @@
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import { FieldArray, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { FlatList, View } from "react-native";
-import DatePicker from "react-native-date-picker";
 
+import { AvatarFallbackText, AvatarGroup } from "@/components/ui/avatar";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { FormInput } from "@/components/ui/FormInput";
+import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
+import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import { VStack } from "@/components/ui/vstack";
 import { CampaignSchema } from "@/models/campaign";
-import { FormInput } from "@/src/components/ui/FormInput";
-import { Badge } from "@/src/componentscomponents/ui/Badge";
-import { Button } from "@/src/componentscomponents/ui/Button";
-import { Card, CardSection } from "@/src/componentscomponents/ui/Card";
-import { Header } from "@/src/componentscomponents/ui/Header";
-import { Page } from "@/src/componentscomponents/ui/Page";
-import { Body, Subtitle } from "@/src/componentscomponents/ui/TextVariants";
-import { useToast } from "@/src/componentscomponents/ui/Toast";
 
 type Player = { name: string };
 
@@ -38,58 +38,70 @@ export default function NewCampaign() {
           startDate: DateTime.fromJSDate(values.startDate).toISO(),
           players: values.players.map((p) => ({ name: p.name.trim() })),
         });
-        show("Campaign created");
+        show({
+          render: () => (
+            <Toast>
+              <ToastTitle>Campaign created</ToastTitle>
+            </Toast>
+          ),
+        });
         navigation.goBack?.();
       }}
     >
-      {({ values, setFieldValue, handleSubmit, isSubmitting }) => (
-        <Page>
-          <Header
-            title="Create Campaign"
-            subtitle="Name it, set a start date, add players."
-          />
+      {({
+        values,
+        handleBlur,
+        setFieldValue,
+        handleSubmit,
+        isSubmitting,
+      }) => (
+        <VStack>
+          <Heading>Create Campaign</Heading>
           <Card>
-            <CardSection>
-              <Subtitle>Campaign name</Subtitle>
-              <FormInput name="name" placeholder="Campaign name" />
-            </CardSection>
+            <FormInput
+              name="name"
+              label="Campaign Name"
+              inputProps={{ placeholder: "Campaign name" }}
+            />
 
-            <CardSection>
-              <Subtitle>Start date</Subtitle>
-              <View className="flex-row gap-2">
-                <Button
-                  variant="ghost"
-                  onPress={() => setStartDatePickerOpen(true)}
-                >
+            <Heading>Start date</Heading>
+            <View className="flex-row gap-2">
+              {/* <Button
+                variant="link"
+                onPress={() => {
+                  setStartDatePickerOpen(true);
+                  handleBlur("startDate");
+                }}
+              >
+                <ButtonText>
                   {DateTime.fromJSDate(values.startDate).toFormat(
                     "MMM dd, yyyy"
                   )}
-                </Button>
-                <DatePicker
-                  modal
-                  open={isStartDatePickerOpen}
-                  date={values.startDate}
-                  mode="date"
-                  onConfirm={(date) => {
-                    setStartDatePickerOpen(false);
-                    setFieldValue("startDate", date);
-                  }}
-                  onCancel={() => setStartDatePickerOpen(false)}
-                />
-              </View>
-            </CardSection>
+                </ButtonText>
+              </Button> */}
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={values.startDate}
+                mode="date"
+                is24Hour={false}
+                onChange={(event, selectedDate) => setFieldValue("startDate", selectedDate ?? "")}
+              />
+            </View>
 
             <FieldArray
               name="players"
               render={(arrayHelpers) => (
-                <CardSection>
-                  <Subtitle>Players</Subtitle>
+                <>
+                  <Heading>Players</Heading>
                   <View className="flex-row gap-2">
                     <View className="flex-1">
                       <FormInput
+                        label="Player Name"
                         name="newPlayerName"
-                        placeholder="Player name"
-                        editable={values.players.length < 4}
+                        inputProps={{
+                          placeholder: "Player name",
+                        }}
+                        isDisabled={values.players.length < 4}
                       />
                     </View>
                     <Button
@@ -111,7 +123,7 @@ export default function NewCampaign() {
                         !values.newPlayerName.trim()
                       }
                     >
-                      Add
+                      <ButtonText>Add</ButtonText>
                     </Button>
                   </View>
 
@@ -122,19 +134,21 @@ export default function NewCampaign() {
                         keyExtractor={(_, i) => String(i)}
                         renderItem={({ item, index }) => (
                           <View className="flex-row items-center justify-between py-2">
-                            <Body>{item.name}</Body>
+                            <Text>{item.name}</Text>
                             <Button
                               variant="outline"
                               onPress={() => arrayHelpers.remove(index)}
                             >
-                              Remove
+                              <ButtonText>Remove</ButtonText>
                             </Button>
                           </View>
                         )}
                       />
                       <View className="flex-row flex-wrap gap-2 mt-2">
                         {values.players.map((p, i) => (
-                          <Badge key={i}>{p.name[0]?.toUpperCase()}</Badge>
+                          <AvatarGroup key={i}>
+                            <AvatarFallbackText>{p.name}</AvatarFallbackText>
+                          </AvatarGroup>
                         ))}
                       </View>
                     </View>
@@ -142,22 +156,20 @@ export default function NewCampaign() {
 
                   {values.players.length === 0 && (
                     <View className="mt-3">
-                      <Body className="text-neutral-500">
+                      <Text className="text-neutral-500">
                         Please add at least one player
-                      </Body>
+                      </Text>
                     </View>
                   )}
-                </CardSection>
+                </>
               )}
             />
 
-            <CardSection>
-              <Button onPress={handleSubmit as any} disabled={isSubmitting}>
-                Create Campaign
-              </Button>
-            </CardSection>
+            <Button onPress={handleSubmit as any} disabled={isSubmitting}>
+              <ButtonText>Create Campaign</ButtonText>
+            </Button>
           </Card>
-        </Page>
+        </VStack>
       )}
     </Formik>
   );
