@@ -19,7 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Filters out documentation and configuration files
 
 ### Changed
-- Implemented Formik and Yup integration into NewCampaign page for form validation and handling
+- Enhanced NewCampaign page with improved form handling:
+  - Replaced manual Input components with FormInput for automatic error handling
+  - Integrated Luxon for proper date formatting and manipulation
+  - Improved player list management with better Formik patterns
+  - Added duplicate player name prevention
+  - Enhanced UX with conditional rendering and better validation states
+  - Removed manual error display logic (now handled by FormInput)
+- Added @types/luxon TypeScript definitions for better type safety
 
 ## [0.1.0] - 2024-12-XX
 
