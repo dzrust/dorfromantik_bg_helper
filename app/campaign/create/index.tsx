@@ -1,11 +1,11 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import { FieldArray, Formik } from "formik";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import { FlatList, View } from "react-native";
 
-import { AvatarFallbackText, AvatarGroup } from "@/components/ui/avatar";
+import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FormInput } from "@/components/ui/FormInput";
@@ -13,12 +13,13 @@ import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
-import { CampaignSchema } from "@/models/campaign";
+import { campaignService } from "@/db/services";
+import { CampaignSchema, CreateCampaignData } from "@/models/campaign";
 
 type Player = { name: string };
 
 export default function NewCampaign() {
-  const navigation = useNavigation<any>();
+  const router = useRouter();
   const { show } = useToast();
   const [isStartDatePickerOpen, setStartDatePickerOpen] = useState(false);
 
@@ -31,30 +32,41 @@ export default function NewCampaign() {
         newPlayerName: "",
       }}
       validationSchema={CampaignSchema}
-      onSubmit={(values) => {
-        // TODO: Save campaign data to database
-        console.log("Campaign data:", {
-          name: values.name.trim(),
-          startDate: DateTime.fromJSDate(values.startDate).toISO(),
-          players: values.players.map((p) => ({ name: p.name.trim() })),
-        });
-        show({
-          render: () => (
-            <Toast>
-              <ToastTitle>Campaign created</ToastTitle>
-            </Toast>
-          ),
-        });
-        navigation.goBack?.();
+      onSubmit={async (values, { setSubmitting }) => {
+        try {
+          setSubmitting(true);
+          const campaignData: CreateCampaignData = {
+            name: values.name.trim(),
+            startDate: DateTime.fromJSDate(values.startDate).toISO(),
+            players: values.players.map((p) => ({ name: p.name.trim() })),
+          };
+
+          await campaignService.create(campaignData);
+
+          show({
+            render: () => (
+              <Toast>
+                <ToastTitle>Campaign created successfully!</ToastTitle>
+              </Toast>
+            ),
+          });
+
+          router.back();
+        } catch (error) {
+          console.error("Failed to create campaign:", error);
+          show({
+            render: () => (
+              <Toast>
+                <ToastTitle>Failed to create campaign</ToastTitle>
+              </Toast>
+            ),
+          });
+        } finally {
+          setSubmitting(false);
+        }
       }}
     >
-      {({
-        values,
-        handleBlur,
-        setFieldValue,
-        handleSubmit,
-        isSubmitting,
-      }) => (
+      {({ values, handleBlur, setFieldValue, handleSubmit, isSubmitting }) => (
         <VStack>
           <Heading>Create Campaign</Heading>
           <Card>
@@ -84,7 +96,9 @@ export default function NewCampaign() {
                 value={values.startDate}
                 mode="date"
                 is24Hour={false}
-                onChange={(event, selectedDate) => setFieldValue("startDate", selectedDate ?? "")}
+                onChange={(event, selectedDate) =>
+                  setFieldValue("startDate", selectedDate ?? "")
+                }
               />
             </View>
 
@@ -101,7 +115,7 @@ export default function NewCampaign() {
                         inputProps={{
                           placeholder: "Player name",
                         }}
-                        isDisabled={values.players.length < 4}
+                        isDisabled={values.players.length === 4}
                       />
                     </View>
                     <Button
@@ -145,10 +159,10 @@ export default function NewCampaign() {
                         )}
                       />
                       <View className="flex-row flex-wrap gap-2 mt-2">
-                        {values.players.map((p, i) => (
-                          <AvatarGroup key={i}>
+                        {(values.players ?? []).map((p, i) => (
+                          <Avatar key={i}>
                             <AvatarFallbackText>{p.name}</AvatarFallbackText>
-                          </AvatarGroup>
+                          </Avatar>
                         ))}
                       </View>
                     </View>

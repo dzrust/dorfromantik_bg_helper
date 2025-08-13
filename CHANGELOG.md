@@ -33,6 +33,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Configured environment variable support with DARK_MODE=media
 
 ### Added
+- **Complete Dorfromantik Boardgame Helper Implementation**
+  - Full SQLite database with Drizzle ORM integration
+  - Comprehensive database schema for campaigns, players, sessions, tiles, and scores
+  - Database migration and initialization system
+  - Complete campaign management system:
+    - Campaign creation with players (1-4 players)
+    - Campaign listing and detail views
+    - Achievement tracking at campaign level
+  - Full play session functionality:
+    - Session creation and management
+    - Task tile deck management with proper tile pools
+    - Tile reveal system with random draws from pools
+    - Special 7-tile achievement integration
+    - 3-tiles-in-play rule enforcement
+    - Automatic tile refilling system
+    - Tile completion tracking
+  - Three-section scoring system:
+    - Section 1: Task tile value totals (automatic calculation)
+    - Section 2: Flags for grain/city/forest + longest railroad/river paths
+    - Section 3: Achievement-based bonus points
+    - Real-time score calculation and display
+  - Complete tile management system:
+    - 5 tile types: grain, city, railroad, river, forest
+    - Tile values: 4, 5, 6, 7 with proper distribution
+    - Base deck: 30 tiles (6 of each type with values [4,4,5,5,6,6])
+    - Special achievement tiles: 3 additional 7-value tiles for grain/city/forest
+    - Proper deck depletion handling
+  - Enhanced UI components and navigation:
+    - Campaign list with creation workflow
+    - Campaign detail with session management
+    - Play session screen with tile reveal and completion
+    - Score entry screen with three-section breakdown
+    - Session edit capabilities
+  - Database services layer:
+    - Campaign CRUD operations
+    - Session management services
+    - Tile pool and task tile services
+    - Score calculation and persistence
+    - Achievement management
 - FormInput UI component that integrates directly with Formik context
   - Automatic error display using ErrorMessage component
   - Visual error state with red border styling when touched and has errors
