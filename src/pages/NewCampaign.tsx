@@ -85,7 +85,6 @@ export default function NewCampaign() {
                         name="newPlayerName"
                         placeholder="Player name"
                         editable={values.players.length < 4}
-                        showError={false}
                       />
                     </View>
                     <Button

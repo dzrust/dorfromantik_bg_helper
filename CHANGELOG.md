@@ -8,11 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- FormInput UI component that wraps Formik Field and ErrorMessage components
-  - Automatic error display when field is touched and has validation errors
-  - Visual error state with red border styling
-  - Uses Formik's Field render props pattern for proper integration
-  - Leverages ErrorMessage component for built-in touched && error logic
+- FormInput UI component that integrates directly with Formik context
+  - Automatic error display using ErrorMessage component
+  - Visual error state with red border styling when touched and has errors
+  - Uses useFormikContext hook for direct access to form state
+  - Leverages getIn utility for nested field path support
+  - Simplified API - only requires name prop for full Formik integration
+  - Removed showError prop - ErrorMessage handles display logic automatically
 - Pre-commit hook to remind developers to update CHANGELOG.md for manual changes
   - Detects AI vs manual commits and prompts accordingly
   - Interactive confirmation for proceeding without changelog updates
