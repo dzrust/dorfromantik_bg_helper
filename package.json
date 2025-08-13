@@ -15,6 +15,7 @@
     "nativewind": "4.1.23",
     "react": "19.1.0",
     "react-native": "0.80.2",
+    "react-native-date-picker": "^5.0.13",
     "react-native-reanimated": "3.19.1",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "4.13.1"

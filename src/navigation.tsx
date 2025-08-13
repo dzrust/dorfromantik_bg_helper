@@ -6,6 +6,7 @@ import PlaySession from "./pages/PlaySession";
 import EditSession from "./pages/EditSession";
 import EndSession from "./pages/EndSession";
 import { ROUTES } from "./models/route";
+import NewCampaign from "./pages/NewCampaign";
 
 
 
@@ -13,6 +14,7 @@ const RootStack = createNativeStackNavigator({
   screens: {
     [ROUTES.HOME]: CampaignList,
     [ROUTES.DETAILS]: CampaignDetail,
+    [ROUTES.NEW]: NewCampaign,
     [ROUTES.SESSION]: PlaySession,
     [ROUTES.EDIT_SESSION]: EditSession,
     [ROUTES.SCORE]: EndSession
