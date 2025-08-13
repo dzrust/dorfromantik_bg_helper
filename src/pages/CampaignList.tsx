@@ -2,15 +2,16 @@ import { useNavigation } from "@react-navigation/native";
 import { Button } from "../components/ui/Button";
 import { Card, CardTitle, CardSection } from "../components/ui/Card";
 import React from "react";
-import { View, FlatList, Pressable, Text } from "react-native";
+import { FlatList, Pressable, Text } from "react-native";
 import { ROUTES } from "../models/route";
+import { Page } from "../components/ui/Page";
 
 const campaigns = [{ id: "1", name: "Family Run", startDate: "2025-08-01" }];
 
 export default function CampaignList() {
   const navigation = useNavigation<any>();
   return (
-    <View className="flex-1 bg-neutral-50 p-4">
+    <Page>
       <Button onPress={() => navigation.navigate(ROUTES.NEW)}>Start Campaign</Button>
       <FlatList
         data={campaigns}
@@ -26,6 +27,6 @@ export default function CampaignList() {
           </Pressable>
         )}
       />
-    </View>
+    </Page>
   );
 }

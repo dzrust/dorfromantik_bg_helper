@@ -3,9 +3,10 @@ import { Button } from "../components/ui/Button";
 import { Card, CardSection, CardTitle } from "../components/ui/Card";
 import { Select } from "../components/ui/Select";
 import React, { useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { Text, FlatList } from "react-native";
 import type { StaticScreenProps } from "@react-navigation/native";
 import { ROUTES } from "../models/route";
+import { Page } from "../components/ui/Page";
 
 type Props = StaticScreenProps<{
   campaignId: string;
@@ -17,7 +18,7 @@ export default function PlaySession({ route }: Props) {
   const [tilesInPlay, setTilesInPlay] = useState<any[]>([]);
 
   return (
-    <View className="flex-1 bg-neutral-50 p-4">
+    <Page>
       <Card>
         <CardTitle>Tiles In Play</CardTitle>
         <FlatList
@@ -45,6 +46,6 @@ export default function PlaySession({ route }: Props) {
         />
       </Card>
       <Button onPress={() => navigation.navigate(ROUTES.SCORE, { campaignId })}>End Session</Button>
-    </View>
+    </Page>
   );
 }

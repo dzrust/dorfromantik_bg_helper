@@ -2,9 +2,9 @@ import { Button } from "../components/ui/Button";
 import { Card, CardSection, CardTitle } from "../components/ui/Card";
 import { Input } from "../components/ui/Input";
 import React, { useState } from "react";
-import { View } from "react-native";
 import { useNavigation, type StaticScreenProps } from "@react-navigation/native";
 import { ROUTES } from "../models/route";
+import { Page } from "../components/ui/Page";
 
 type Props = StaticScreenProps<{
   campaignId: string;
@@ -17,7 +17,7 @@ export default function EndSession({ route }: Props) {
   const [longest, setLongest] = useState({ railroad: "", river: "" });
 
   return (
-    <View className="flex-1 bg-neutral-50 p-4">
+    <Page>
       <Card>
         <CardTitle>Scoring</CardTitle>
         <CardSection>
@@ -41,6 +41,6 @@ export default function EndSession({ route }: Props) {
         </CardSection>
         <Button onPress={() => navigation.navigate(ROUTES.DETAILS, { id: campaignId })}>Save</Button>
       </Card>
-    </View>
+    </Page>
   );
 }

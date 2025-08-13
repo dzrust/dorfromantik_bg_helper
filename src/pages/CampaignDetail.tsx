@@ -1,9 +1,10 @@
 import { Button } from "../components/ui/Button";
 import { Card, CardTitle } from "../components/ui/Card";
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { Text, FlatList } from "react-native";
 import { useNavigation, type StaticScreenProps } from "@react-navigation/native";
 import { ROUTES } from "../models/route";
+import { Page } from "../components/ui/Page";
 
 type Props = StaticScreenProps<{
   id: string;
@@ -15,7 +16,7 @@ export default function CampaignDetail({ route }: Props) {
   const { id } = route.params;
   const navigation = useNavigation<any>();
   return (
-    <View className="flex-1 bg-neutral-50 p-4">
+    <Page>
       <Button onPress={() => navigation.navigate(ROUTES.SESSION, { campaignId: id })}>Start Session</Button>
       <FlatList
         data={sessions}
@@ -28,6 +29,6 @@ export default function CampaignDetail({ route }: Props) {
           </Card>
         )}
       />
-    </View>
+    </Page>
   );
 }

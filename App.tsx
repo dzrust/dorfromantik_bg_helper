@@ -8,11 +8,16 @@
 import "./global.css";
 import { useColorScheme } from "react-native";
 import { Navigation } from "./src/navigation";
+import { ToastProvider } from "./src";
 
 function App() {
   const isDarkMode = useColorScheme() === "dark";
 
-  return <Navigation />;
+  return (
+    <ToastProvider>
+      <Navigation />
+    </ToastProvider>
+  );
 }
 
 export default App;
