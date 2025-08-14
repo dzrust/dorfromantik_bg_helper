@@ -2,7 +2,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { FieldArray, Formik } from "formik";
 import { DateTime } from "luxon";
-import React, { useState } from "react";
+import React from "react";
 import { FlatList, View } from "react-native";
 
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
@@ -13,35 +13,39 @@ import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
-import { campaignService } from "@/db/services";
-import { CampaignSchema, CreateCampaignData } from "@/models/campaign";
+import { createCampaign } from "@/db/campaign";
+import { NewCampaignDB } from "@/db/schema";
+import { CampaignSchema } from "@/models/campaign";
 
 type Player = { name: string };
 
 export default function NewCampaign() {
   const router = useRouter();
   const { show } = useToast();
-  const [isStartDatePickerOpen, setStartDatePickerOpen] = useState(false);
 
   return (
     <Formik
       initialValues={{
         name: "",
         startDate: DateTime.now().toJSDate(),
-        players: [] as Player[],
+        players: [] as string[],
         newPlayerName: "",
       }}
       validationSchema={CampaignSchema}
       onSubmit={async (values, { setSubmitting }) => {
         try {
           setSubmitting(true);
-          const campaignData: CreateCampaignData = {
+          const campaignData: NewCampaignDB = {
             name: values.name.trim(),
-            startDate: DateTime.fromJSDate(values.startDate).toISO(),
-            players: values.players.map((p) => ({ name: p.name.trim() })),
+            startDate:
+              DateTime.fromJSDate(values.startDate).toISO() ??
+              DateTime.now().toISO(),
           };
 
-          await campaignService.create(campaignData);
+          await createCampaign(
+            campaignData,
+            values.players.map((p) => p.trim())
+          );
 
           show({
             render: () => (
@@ -78,19 +82,6 @@ export default function NewCampaign() {
 
             <Heading>Start date</Heading>
             <View className="flex-row gap-2">
-              {/* <Button
-                variant="link"
-                onPress={() => {
-                  setStartDatePickerOpen(true);
-                  handleBlur("startDate");
-                }}
-              >
-                <ButtonText>
-                  {DateTime.fromJSDate(values.startDate).toFormat(
-                    "MMM dd, yyyy"
-                  )}
-                </ButtonText>
-              </Button> */}
               <DateTimePicker
                 testID="dateTimePicker"
                 value={values.startDate}
@@ -125,17 +116,14 @@ export default function NewCampaign() {
                         if (values.players.length >= 4) return;
                         if (
                           values.players.some(
-                            (p) => p.name.toLowerCase() === name.toLowerCase()
+                            (p) => p.toLowerCase() === name.toLowerCase()
                           )
                         )
                           return;
                         arrayHelpers.push({ name });
                         setFieldValue("newPlayerName", "");
                       }}
-                      disabled={
-                        values.players.length >= 4 ||
-                        !values.newPlayerName.trim()
-                      }
+                      disabled={values.players.length >= 4}
                     >
                       <ButtonText>Add</ButtonText>
                     </Button>
@@ -148,7 +136,7 @@ export default function NewCampaign() {
                         keyExtractor={(_, i) => String(i)}
                         renderItem={({ item, index }) => (
                           <View className="flex-row items-center justify-between py-2">
-                            <Text>{item.name}</Text>
+                            <Text>{item}</Text>
                             <Button
                               variant="outline"
                               onPress={() => arrayHelpers.remove(index)}
@@ -161,7 +149,7 @@ export default function NewCampaign() {
                       <View className="flex-row flex-wrap gap-2 mt-2">
                         {(values.players ?? []).map((p, i) => (
                           <Avatar key={i}>
-                            <AvatarFallbackText>{p.name}</AvatarFallbackText>
+                            <AvatarFallbackText>{p}</AvatarFallbackText>
                           </Avatar>
                         ))}
                       </View>

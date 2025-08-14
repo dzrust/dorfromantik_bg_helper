@@ -5,6 +5,17 @@ All notable changes to the Dorfromantik Boardgame Helper project will be documen
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2024-12-14
+
+### Major Release
+- **Complete Dorfromantik Boardgame Helper Implementation**
+
+### Fixed
+- SQL migration syntax error in database migrations
+  - Fixed missing semicolons after SQL statements
+  - Separated statement-breakpoint comments to their own lines
+  - Ensures proper database migration execution
+
 ## [Unreleased]
 
 ### Changed

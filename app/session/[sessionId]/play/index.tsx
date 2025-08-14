@@ -10,7 +10,6 @@ import React, { useState, useEffect } from "react";
 import { FlatList, View, ActivityIndicator, Alert } from "react-native";
 import { ROUTES } from "../../../../models/route";
 import { sessionService, taskTileService, tilePoolService } from "@/db/services";
-import { TILE_TYPES, TILE_STATES } from "@/db/schema";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 
 export default function PlaySession() {

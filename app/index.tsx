@@ -4,16 +4,20 @@ import { Heading } from "@/components/ui/heading";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { getCampaigns } from "@/db/campaign";
+import { db } from "@/db/config";
+import migrations from "@/db/migrations/migrations";
+import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { FlatList, ActivityIndicator, View } from "react-native";
-import { ROUTES } from "../models/route";
-import { campaignService } from "../db/services";
-import { type Campaign as DbCampaign } from "../db/schema";
 import { DateTime } from "luxon";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, View } from "react-native";
+import { type CampaignDB as DbCampaign } from "../db/schema";
+import { ROUTES } from "../models/route";
 
 export default function CampaignList() {
   const router = useRouter();
+  const { success, error } = useMigrations(db, migrations);
   const [campaigns, setCampaigns] = useState<DbCampaign[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,10 +28,10 @@ export default function CampaignList() {
   const loadCampaigns = async () => {
     try {
       setLoading(true);
-      const data = await campaignService.getAll();
+      const data = await getCampaigns();
       setCampaigns(data);
     } catch (error) {
-      console.error('Failed to load campaigns:', error);
+      console.error("Failed to load campaigns:", error);
     } finally {
       setLoading(false);
     }
@@ -46,36 +50,41 @@ export default function CampaignList() {
       <Button onPress={() => router.navigate(ROUTES.NEW)}>
         <ButtonText>Start Campaign</ButtonText>
       </Button>
-      
-      {campaigns.length === 0 ? (
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-neutral-500 text-center">
-            No campaigns yet. Create your first campaign to get started!
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={campaigns}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <Pressable
-              onPress={() => router.navigate(ROUTES.DETAILS.replace('[campaignId]', item.id.toString()))}
-            >
-              <Card className="mt-4">
-                <Heading>{item.name}</Heading>
+
+      <FlatList
+        data={campaigns}
+        ListEmptyComponent={
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-neutral-500 text-center">
+              No campaigns yet. Create your first campaign to get started!
+            </Text>
+          </View>
+        }
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() =>
+              router.navigate(
+                ROUTES.DETAILS.replace("[campaignId]", `${item.id}`)
+              )
+            }
+          >
+            <Card className="mt-4">
+              <Heading>{item.name}</Heading>
+              <Text className="text-neutral-500">
+                Started{" "}
+                {DateTime.fromISO(item.startDate).toFormat("MMM dd, yyyy")}
+              </Text>
+              {item.endDate && (
                 <Text className="text-neutral-500">
-                  Started {DateTime.fromISO(item.startDate).toFormat('MMM dd, yyyy')}
+                  Ended{" "}
+                  {DateTime.fromISO(item.endDate!).toFormat("MMM dd, yyyy")}
                 </Text>
-                {item.endDate && (
-                  <Text className="text-neutral-500">
-                    Ended {DateTime.fromISO(item.endDate!).toFormat('MMM dd, yyyy')}
-                  </Text>
-                )}
-              </Card>
-            </Pressable>
-          )}
-        />
-      )}
+              )}
+            </Card>
+          </Pressable>
+        )}
+      />
     </VStack>
   );
 }
