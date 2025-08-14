@@ -171,6 +171,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Formik 2.4.6 + Yup 1.7.0 for forms
 - Prisma with SQLite for data persistence (planned)
 - Luxon 3.7.1 for date handling
+- CHMOD 777
 
 ### Game Logic Implemented
 - Tile deck management with 30 base tiles + 3 achievement-unlocked "7" tiles
