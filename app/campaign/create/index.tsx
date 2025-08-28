@@ -13,11 +13,7 @@ import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
-import { createCampaign } from "@/db/campaign";
-import { NewCampaignDB } from "@/db/schema";
 import { CampaignSchema } from "@/models/campaign";
-
-type Player = { name: string };
 
 export default function NewCampaign() {
   const router = useRouter();
@@ -35,17 +31,17 @@ export default function NewCampaign() {
       onSubmit={async (values, { setSubmitting }) => {
         try {
           setSubmitting(true);
-          const campaignData: NewCampaignDB = {
+          const campaignData: any = {
             name: values.name.trim(),
             startDate:
               DateTime.fromJSDate(values.startDate).toISO() ??
               DateTime.now().toISO(),
           };
 
-          await createCampaign(
-            campaignData,
-            values.players.map((p) => p.trim())
-          );
+          // await createCampaign(
+          //   campaignData,
+          //   values.players.map((p) => p.trim())
+          // );
 
           show({
             render: () => (

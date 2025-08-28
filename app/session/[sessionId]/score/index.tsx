@@ -3,17 +3,14 @@ import { Card } from "@/components/ui/card";
 import { FormInput } from "@/components/ui/FormInput";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
+import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { ROUTES } from "@/models/route";
-import { useRouter } from "expo-router";
-import { useLocalSearchParams } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { View, ActivityIndicator } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 import * as yup from "yup";
-import { sessionService, taskTileService, scoreService, campaignService } from "@/db/services";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
-import { ACHIEVEMENT_KEY } from "@/models/achievement";
 
 const scoringSchema = yup.object({
   grainFlags: yup.number().min(0, 'Must be 0 or greater').required('Required'),
@@ -41,16 +38,16 @@ export default function SessionScore() {
   const loadSessionData = async () => {
     try {
       setLoading(true);
-      const sessionData = await sessionService.getById(sessionId as string);
+      const sessionData = null;
       if (sessionData) {
         setSession(sessionData);
-        const campaignData = await campaignService.getById(sessionData.campaignId);
+        const campaignData = null;
         setCampaign(campaignData);
         
-        const completed = await taskTileService.getCompletedTiles(sessionId as string);
-        setCompletedTiles(completed);
+        const completed = null;
+        setCompletedTiles([]);
         
-        const score = await scoreService.getScore(sessionId as string);
+        const score = null;
         setCurrentScore(score);
       }
     } catch (error) {
@@ -134,15 +131,15 @@ export default function SessionScore() {
             });
 
             // Update the score
-            await scoreService.updateScore(sessionId as string, {
-              taskTileScore,
-              grainFlags: values.grainFlags,
-              cityFlags: values.cityFlags,
-              forestFlags: values.forestFlags,
-              longestRailroad: values.longestRailroad,
-              longestRiver: values.longestRiver,
-              achievementScores: JSON.stringify(achievementScores),
-            });
+            // await scoreService.updateScore(sessionId as string, {
+            //   taskTileScore,
+            //   grainFlags: values.grainFlags,
+            //   cityFlags: values.cityFlags,
+            //   forestFlags: values.forestFlags,
+            //   longestRailroad: values.longestRailroad,
+            //   longestRiver: values.longestRiver,
+            //   achievementScores: JSON.stringify(achievementScores),
+            // });
 
             show({
               render: () => (

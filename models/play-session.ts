@@ -1,17 +1,12 @@
-import {
-  type PlaySessionDB as DbPlaySession,
-  type SessionScoreDB as DbSessionScore,
-  type TilePoolDB
-} from "../db/schema";
 import { ACHIEVEMENT_KEY } from "./achievement";
 import { Player } from "./player";
 import { TaskTile, TILE_TYPE } from "./task-tile";
 
-export type PlaySession = DbPlaySession & {
+export type PlaySession = {
+  id: number;
   players: Player[];
   tiles: TaskTile[];
-  tilePools: TilePoolDB[];
-  score: DbSessionScore;
+  score: PlaySessionScore;
 };
 
 export type PlaySessionScore = {

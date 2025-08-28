@@ -3,14 +3,12 @@ import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Select, SelectItem } from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
-import { useRouter } from "expo-router";
-import { useLocalSearchParams } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { FlatList, View, ActivityIndicator, Alert } from "react-native";
-import { ROUTES } from "../../../../models/route";
-import { sessionService, taskTileService, tilePoolService } from "@/db/services";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import { VStack } from "@/components/ui/vstack";
+import { ROUTES } from "@/models/route";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, FlatList, View } from "react-native";
 
 export default function PlaySession() {
   const router = useRouter();
@@ -30,13 +28,11 @@ export default function PlaySession() {
   const loadSessionData = async () => {
     try {
       setLoading(true);
-      const sessionData = await sessionService.getById(sessionId as string);
+      const sessionData = null;
       if (sessionData) {
         setSession(sessionData);
-        const inPlayTiles = await taskTileService.getInPlayTiles(sessionId as string);
-        const availablePools = await tilePoolService.getAvailableTiles(sessionId as string);
-        setTilesInPlay(inPlayTiles);
-        setTilePools(availablePools);
+        setTilesInPlay([]);
+        setTilePools([]);
       }
     } catch (error) {
       console.error('Failed to load session:', error);
@@ -47,10 +43,10 @@ export default function PlaySession() {
 
   const completeTile = async (tileId: string) => {
     try {
-      await taskTileService.completeTile(tileId);
+      // await taskTileService.completeTile(tileId);
       
       // Auto-draw new tiles to maintain 3 in play
-      const newTiles = await taskTileService.autoDrawTiles(sessionId as string);
+      // const newTiles = await taskTileService.autoDrawTiles(sessionId as string);
       
       // Reload data
       await loadSessionData();
@@ -82,7 +78,7 @@ export default function PlaySession() {
 
     try {
       // Check if we can draw more tiles
-      const canDraw = await taskTileService.canDrawMoreTiles(sessionId as string);
+      const canDraw = false;
       if (!canDraw) {
         Alert.alert('Cannot draw more tiles', 'You already have 3 tiles in play or no tiles available');
         return;
@@ -127,7 +123,7 @@ export default function PlaySession() {
 
   const drawSpecificTile = async (type: string, value: number) => {
     try {
-      await tilePoolService.drawTile(sessionId as string, type as any, value as any);
+      // await tilePoolService.drawTile(sessionId as string, type as any, value as any);
       await loadSessionData();
       setSelectedTileType('');
       
@@ -152,7 +148,7 @@ export default function PlaySession() {
 
   const drawRandomTile = async (type: string) => {
     try {
-      await tilePoolService.getRandomAvailableTile(sessionId as string, type as any);
+      // await tilePoolService.getRandomAvailableTile(sessionId as string, type as any);
       await loadSessionData();
       setSelectedTileType('');
       

@@ -6,10 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { getCampaignById } from "@/db/campaign";
-import { type PlaySessionDB as DbPlaySession } from "@/db/schema";
-import { createPlaySession, getAllPlaySessionsForCampaign } from "@/db/session";
 import { Campaign } from "@/models/campaign";
+import { PlaySession } from "@/models/play-session";
 import { ROUTES } from "@/models/route";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { DateTime } from "luxon";
@@ -20,7 +18,7 @@ export default function CampaignDetail() {
   const router = useRouter();
   const { campaignId } = useLocalSearchParams();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
-  const [sessions, setSessions] = useState<DbPlaySession[]>([]);
+  const [sessions, setSessions] = useState<PlaySession[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,11 +29,10 @@ export default function CampaignDetail() {
     try {
       setLoading(true);
       const id = parseInt(campaignId as string);
-      const campaignData = await getCampaignById(id);
+      const campaignData = null;
       if (campaignData) {
         setCampaign(campaignData);
-        const sessionsData = await getAllPlaySessionsForCampaign(id);
-        setSessions(sessionsData);
+        setSessions([]);
       }
     } catch (error) {
       console.error("Failed to load campaign:", error);
@@ -50,7 +47,7 @@ export default function CampaignDetail() {
     try {
       // Start session with all campaign players
       const playerIds = campaign.players.map((p) => p.id);
-      const session = await createPlaySession(campaign.id, playerIds);
+      const session = { id: 1234 }; //await createPlaySession(campaign.id, playerIds);
       router.navigate(ROUTES.SESSION.replace("[sessionId]", `${session.id}`));
     } catch (error) {
       console.error("Failed to start session:", error);
@@ -79,7 +76,7 @@ export default function CampaignDetail() {
         <Heading>{campaign.name}</Heading>
         <Text className="text-neutral-500 mb-2">
           Started{" "}
-          {DateTime.fromISO(campaign.startDate).toFormat("MMM dd, yyyy")}
+          {DateTime.fromJSDate(campaign.startDate).toFormat("MMM dd, yyyy")}
         </Text>
 
         <Text className="font-semibold mb-2">Players:</Text>

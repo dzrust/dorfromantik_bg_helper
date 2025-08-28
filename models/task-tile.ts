@@ -10,10 +10,11 @@ export type TileValue = 4 | 5 | 6 | 7;
 
 export enum TILE_STATE {
   INPLAY = 0,
-  COMPLETE = 1
+  COMPLETE = 1,
 }
 
 export type TaskTile = {
-  
+  type: TILE_TYPE;
+  state: TILE_STATE;
+  value: TileValue;
 };
-

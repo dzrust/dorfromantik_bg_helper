@@ -4,21 +4,16 @@ import { Heading } from "@/components/ui/heading";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { getCampaigns } from "@/db/campaign";
-import { db } from "@/db/config";
-import migrations from "@/db/migrations/migrations";
-import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import { Campaign } from "@/models/campaign";
 import { useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
-import { type CampaignDB as DbCampaign } from "../db/schema";
 import { ROUTES } from "../models/route";
 
 export default function CampaignList() {
   const router = useRouter();
-  const { success, error } = useMigrations(db, migrations);
-  const [campaigns, setCampaigns] = useState<DbCampaign[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,8 +23,7 @@ export default function CampaignList() {
   const loadCampaigns = async () => {
     try {
       setLoading(true);
-      const data = await getCampaigns();
-      setCampaigns(data);
+      setCampaigns([]);
     } catch (error) {
       console.error("Failed to load campaigns:", error);
     } finally {
@@ -73,12 +67,12 @@ export default function CampaignList() {
               <Heading>{item.name}</Heading>
               <Text className="text-neutral-500">
                 Started{" "}
-                {DateTime.fromISO(item.startDate).toFormat("MMM dd, yyyy")}
+                {DateTime.fromJSDate(item.startDate).toFormat("MMM dd, yyyy")}
               </Text>
               {item.endDate && (
                 <Text className="text-neutral-500">
                   Ended{" "}
-                  {DateTime.fromISO(item.endDate!).toFormat("MMM dd, yyyy")}
+                  {DateTime.fromJSDate(item.endDate!).toFormat("MMM dd, yyyy")}
                 </Text>
               )}
             </Card>

@@ -1,11 +1,7 @@
 import * as yup from "yup";
-import {
-  AchievementDB,
-  PlaySessionDB,
-  type CampaignDB as DbCampaign,
-  type PlayerDB as DbPlayer,
-} from "../db/schema";
-import { PlayerSchema } from "./player";
+import { Achievement } from "./achievement";
+import { PlaySession } from "./play-session";
+import { Player, PlayerSchema } from "./player";
 
 export const CampaignSchema = yup.object({
   name: yup.string().trim().required("Campaign name is required"),
@@ -19,8 +15,10 @@ export const CampaignSchema = yup.object({
 
 export type CampaignFormData = yup.InferType<typeof CampaignSchema>;
 
-export type Campaign = DbCampaign & {
-  players: DbPlayer[];
-  achievements: AchievementDB[];
-  sessions: PlaySessionDB[];
+export type Campaign = Omit<CampaignFormData, "players"> & {
+  id: number;
+  endDate: Date;
+  players: Player[];
+  achievements: Achievement[];
+  sessions: PlaySession[];
 };

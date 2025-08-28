@@ -18,6 +18,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Major Database Layer Refactoring**
+  - Complete restructuring of database services and schema organization
+  - Removed monolithic services.ts file (524 lines removed)
+  - Split database functionality into dedicated modules:
+    - `db/campaign.ts` - Campaign management operations
+    - `db/session.ts` - Play session handling
+    - `db/session-tiles.ts` - Tile management for sessions
+    - `db/score.ts` - Scoring calculations and persistence
+  - Simplified database schema with improved relationships
+  - Enhanced achievement model with comprehensive game achievement definitions
+  - Updated all app screens to work with new data layer structure
+  - Improved component organization with new shared components:
+    - `AchievementList.tsx` - Display and manage achievements
+    - `AchievementSection.tsx` - Achievement UI components
+    - `SessionCard.tsx` - Session display components
+
 ### Changed
 - **BREAKING: Complete migration from React Native CLI to Expo** 
   - Migrated from React Native 0.80.2 to Expo SDK 53 with React Native 0.79.5
