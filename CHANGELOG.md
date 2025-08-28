@@ -131,6 +131,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Checkbox` component with controlled/uncontrolled state management
   - `HStack` component with wrapping support for responsive layouts
   - Complete custom UI component library replacing GlueStack dependencies
+  - Tile-specific color schemes matching board game visual design:
+    - Forest tiles: Light green/olive colors
+    - City tiles: Dark brown/coffee colors  
+    - Grain tiles: Golden yellow colors
+    - Railroad tiles: Dark stone/grey colors
+    - River tiles: Light blue/cyan colors
+  - Color-coded buttons and cards for intuitive tile type recognition
+  - Utility functions for consistent tile-to-color mapping across components
 - **Complete Dorfromantik Boardgame Helper Implementation**
   - Comprehensive database schema for campaigns, players, sessions, tiles, and scores
   - Database migration and initialization system

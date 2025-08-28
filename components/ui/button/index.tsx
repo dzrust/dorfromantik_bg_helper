@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 export interface ButtonProps {
   children: React.ReactNode;
   onPress?: () => void;
-  variant?: 'default' | 'outline' | 'ghost';
+  variant?: 'default' | 'outline' | 'ghost' | 'grain' | 'city' | 'railroad' | 'forest' | 'river';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   isLoading?: boolean;
@@ -26,6 +26,11 @@ export function Button({
     default: 'bg-blue-600 active:bg-blue-700',
     outline: 'border-2 border-blue-600 bg-transparent active:bg-blue-50',
     ghost: 'bg-transparent active:bg-gray-100',
+    forest: 'bg-green-500 active:bg-green-600',
+    city: 'bg-amber-800 active:bg-amber-900',
+    grain: 'bg-yellow-500 active:bg-yellow-600',
+    railroad: 'bg-stone-600 active:bg-stone-700',
+    river: 'bg-cyan-400 active:bg-cyan-500',
   };
   
   const sizeClasses = {
@@ -44,6 +49,11 @@ export function Button({
     default: 'text-white',
     outline: 'text-blue-600',
     ghost: 'text-gray-900',
+    forest: 'text-white',
+    city: 'text-white',
+    grain: 'text-black',
+    railroad: 'text-white',
+    river: 'text-black',
   };
   
   const textSizeClasses = {
@@ -64,7 +74,10 @@ export function Button({
       {isLoading && (
         <ActivityIndicator 
           size="small" 
-          color={variant === 'default' ? '#ffffff' : '#2563eb'} 
+          color={
+            variant === 'grain' || variant === 'river' ? '#000000' : 
+            variant === 'outline' ? '#2563eb' : '#ffffff'
+          } 
           style={{ marginRight: 8 }}
         />
       )}

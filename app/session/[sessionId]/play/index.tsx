@@ -5,6 +5,7 @@ import HStack from '@/components/ui/hstack';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { usePlaySession } from '@/hooks/usePlaySession';
+import { getTileVariant } from '@/utils/tileColors';
 import { Stack } from 'expo-router';
 import { ActivityIndicator, ScrollView } from 'react-native';
 
@@ -56,19 +57,19 @@ export default function PlaySession() {
               Draw Tiles
             </Heading>
             <HStack space="sm" wrap={true}>
-              <Button disabled={!canDrawForest} onPress={drawForest} size="sm">
+              <Button disabled={!canDrawForest} onPress={drawForest} size="sm" variant="forest">
                 Forest ({decks.forest.length})
               </Button>
-              <Button disabled={!canDrawGrain} onPress={drawGrain} size="sm">
+              <Button disabled={!canDrawGrain} onPress={drawGrain} size="sm" variant="grain">
                 Grain ({decks.grain.length})
               </Button>
-              <Button disabled={!canDrawCity} onPress={drawCity} size="sm">
+              <Button disabled={!canDrawCity} onPress={drawCity} size="sm" variant="city">
                 City ({decks.city.length})
               </Button>
-              <Button disabled={!canDrawRailroad} onPress={drawRailroad} size="sm">
+              <Button disabled={!canDrawRailroad} onPress={drawRailroad} size="sm" variant="railroad">
                 Railroad ({decks.railroad.length})
               </Button>
-              <Button disabled={!canDrawRiver} onPress={drawRiver} size="sm">
+              <Button disabled={!canDrawRiver} onPress={drawRiver} size="sm" variant="river">
                 River ({decks.river.length})
               </Button>
             </HStack>
@@ -83,7 +84,7 @@ export default function PlaySession() {
                 <Button
                   key={tile.id}
                   onPress={() => completeTile(tile)}
-                  variant="outline"
+                  variant={getTileVariant(tile.type)}
                   size="sm">
                   {tile.type} - {tile.value}
                 </Button>
@@ -102,7 +103,7 @@ export default function PlaySession() {
             </Heading>
             <HStack space="sm" wrap={true}>
               {completed.map((tile) => (
-                <Card key={tile.id} variant="outline" size="sm">
+                <Card key={tile.id} variant={getTileVariant(tile.type)} size="sm">
                   <Text size="sm">
                     {tile.type} - {tile.value}
                   </Text>
