@@ -1,24 +1,36 @@
 import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-import { View } from 'react-native';
+import { View, ViewProps } from 'react-native';
 
-import { vstackStyle } from './styles';
+export interface VStackProps extends ViewProps {
+  space?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  reversed?: boolean;
+  className?: string;
+}
 
-type IVStackProps = React.ComponentProps<typeof View> &
-  VariantProps<typeof vstackStyle>;
+export function VStack({
+  space = 'md',
+  reversed = false,
+  className = '',
+  ...props
+}: VStackProps) {
+  const baseClasses = 'flex-col';
+  
+  const spaceClasses = {
+    xs: 'gap-1',
+    sm: 'gap-2',
+    md: 'gap-3',
+    lg: 'gap-4',
+    xl: 'gap-5',
+    '2xl': 'gap-6',
+  };
+  
+  const directionClasses = reversed ? 'flex-col-reverse' : 'flex-col';
+  
+  const vstackClasses = `${baseClasses} ${directionClasses} ${spaceClasses[space]} ${className}`;
+  
+  return (
+    <View className={vstackClasses} {...props} />
+  );
+}
 
-const VStack = React.forwardRef<React.ComponentRef<typeof View>, IVStackProps>(
-  function VStack({ className, space, reversed, ...props }, ref) {
-    return (
-      <View
-        className={vstackStyle({ space, reversed, class: className })}
-        {...props}
-        ref={ref}
-      />
-    );
-  }
-);
-
-VStack.displayName = 'VStack';
-
-export { VStack };
+export { VStack as default };

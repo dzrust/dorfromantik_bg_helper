@@ -1,26 +1,40 @@
 import React from 'react';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { View, ViewProps } from 'react-native';
-import { cardStyle } from './styles';
 
-type ICardProps = ViewProps &
-  VariantProps<typeof cardStyle> & { className?: string };
+export interface CardProps extends ViewProps {
+  variant?: 'elevated' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
 
-const Card = React.forwardRef<React.ComponentRef<typeof View>, ICardProps>(
-  function Card(
-    { className, size = 'md', variant = 'elevated', ...props },
-    ref
-  ) {
-    return (
-      <View
-        className={cardStyle({ size, variant, class: className })}
-        {...props}
-        ref={ref}
-      />
-    );
-  }
-);
+export function Card({
+  variant = 'elevated',
+  size = 'md',
+  className = '',
+  children,
+  ...props
+}: CardProps) {
+  const baseClasses = 'bg-white rounded-lg';
+  
+  const variantClasses = {
+    elevated: 'shadow-sm shadow-gray-200',
+    outline: 'border border-gray-200',
+    ghost: 'bg-transparent',
+  };
+  
+  const sizeClasses = {
+    sm: 'p-3',
+    md: 'p-4',
+    lg: 'p-6',
+  };
+  
+  const cardClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  
+  return (
+    <View className={cardClasses} {...props}>
+      {children}
+    </View>
+  );
+}
 
-Card.displayName = 'Card';
-
-export { Card };
+export { Card as default };

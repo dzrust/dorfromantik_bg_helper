@@ -36,6 +36,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `SessionCard.tsx` - Session display components
 
 ### Changed
+- **BREAKING: Replaced GlueStack UI with Custom UI Components**
+  - Migrated from GlueStack UI component library to custom-built components using NativeWind
+  - Complete rewrite of all UI components with simplified APIs and local styling:
+    - `Button` - Custom button with variant (default, outline, ghost), size options, and loading state
+    - `Input` - Text input with variants (outline, underlined, rounded), icon support, and error states
+    - `Card` - Container component with elevation, outline, and ghost variants
+    - `Text` - Typography component with size, weight, and variant options
+    - `Heading` - Header text component with multiple size options
+    - `VStack` - Vertical layout component with configurable spacing and direction
+    - `Select` - Dropdown component with modal-based option selection
+    - `Avatar` - Profile image component with fallback text and multiple sizes
+    - `Toast` - Toast notification system with provider pattern and variant support
+  - Updated `FormInput` component to work with custom Input and Text components
+  - Removed GlueStack UI dependencies and related configuration files
+  - All components use NativeWind for styling with consistent design system
+  - Maintained TypeScript interfaces for type safety and developer experience
 - **BREAKING: Complete migration from React Native CLI to Expo** 
   - Migrated from React Native 0.80.2 to Expo SDK 53 with React Native 0.79.5
   - Updated package.json dependencies to use Expo-managed packages

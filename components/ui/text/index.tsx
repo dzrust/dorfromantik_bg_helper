@@ -1,48 +1,50 @@
 import React from 'react';
+import { Text as RNText, TextProps as RNTextProps } from 'react-native';
 
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-import { Text as RNText } from 'react-native';
-import { textStyle } from './styles';
+export interface TextProps extends RNTextProps {
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+  variant?: 'body' | 'caption' | 'label';
+  weight?: 'normal' | 'medium' | 'semibold' | 'bold';
+  className?: string;
+}
 
-type ITextProps = React.ComponentProps<typeof RNText> &
-  VariantProps<typeof textStyle>;
+export function Text({
+  size = 'md',
+  variant = 'body',
+  weight = 'normal',
+  className = '',
+  ...props
+}: TextProps) {
+  const baseClasses = 'text-gray-900';
+  
+  const sizeClasses = {
+    xs: 'text-xs',
+    sm: 'text-sm', 
+    md: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl',
+    '2xl': 'text-2xl',
+    '3xl': 'text-3xl',
+  };
+  
+  const variantClasses = {
+    body: '',
+    caption: 'text-gray-600',
+    label: 'text-gray-700',
+  };
+  
+  const weightClasses = {
+    normal: 'font-normal',
+    medium: 'font-medium',
+    semibold: 'font-semibold',
+    bold: 'font-bold',
+  };
+  
+  const textClasses = `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${weightClasses[weight]} ${className}`;
+  
+  return (
+    <RNText className={textClasses} {...props} />
+  );
+}
 
-const Text = React.forwardRef<React.ComponentRef<typeof RNText>, ITextProps>(
-  function Text(
-    {
-      className,
-      isTruncated,
-      bold,
-      underline,
-      strikeThrough,
-      size = 'md',
-      sub,
-      italic,
-      highlight,
-      ...props
-    },
-    ref
-  ) {
-    return (
-      <RNText
-        className={textStyle({
-          isTruncated,
-          bold,
-          underline,
-          strikeThrough,
-          size,
-          sub,
-          italic,
-          highlight,
-          class: className,
-        })}
-        {...props}
-        ref={ref}
-      />
-    );
-  }
-);
-
-Text.displayName = 'Text';
-
-export { Text };
+export { Text as default };
