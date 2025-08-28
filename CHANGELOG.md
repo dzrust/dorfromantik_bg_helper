@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `Text` - Typography component with size, weight, and variant options
     - `Heading` - Header text component with multiple size options
     - `VStack` - Vertical layout component with configurable spacing and direction
+    - `HStack` - Horizontal layout component with configurable spacing and direction
     - `Select` - Dropdown component with modal-based option selection
     - `Avatar` - Profile image component with fallback text and multiple sizes
     - `Toast` - Toast notification system with provider pattern and variant support
