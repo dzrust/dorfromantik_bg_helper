@@ -50,6 +50,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Enhanced play session screen with tile deck counters and game state visualization
     - Responsive layouts using custom HStack/VStack components with proper wrapping
     - Loading states and disabled interactions during async operations
+    - Improved navigation with proper Stack.Screen integration and page titles
+    - Standardized screen wrapper pattern for consistent navigation headers
+    - Cleaner code organization and formatting improvements
 
 ### Changed
 - **BREAKING: Replaced GlueStack UI with Custom UI Components**
