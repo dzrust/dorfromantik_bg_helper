@@ -14,6 +14,7 @@ export enum TILE_STATE {
 }
 
 export type TaskTile = {
+  id: number;
   type: TILE_TYPE;
   state: TILE_STATE;
   value: TileValue;

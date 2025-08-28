@@ -1,282 +1,128 @@
-import { Button, ButtonText } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Heading } from "@/components/ui/heading";
-import { Select, SelectItem } from "@/components/ui/select";
-import { Text } from "@/components/ui/text";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
-import { VStack } from "@/components/ui/vstack";
-import { ROUTES } from "@/models/route";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, FlatList, View } from "react-native";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Heading } from '@/components/ui/heading';
+import HStack from '@/components/ui/hstack';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { useAchievements } from '@/hooks/useAchievements';
+import { usePlaySession } from '@/hooks/usePlaySession';
+import { ActivityIndicator, ScrollView } from 'react-native';
 
 export default function PlaySession() {
-  const router = useRouter();
-  const { sessionId } = useLocalSearchParams();
-  const { show } = useToast();
+  const { 
+    unlockedAchievements, 
+    isLoading: achievementsLoading 
+  } = useAchievements();
   
-  const [session, setSession] = useState<any>(null);
-  const [tilesInPlay, setTilesInPlay] = useState<any[]>([]);
-  const [tilePools, setTilePools] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedTileType, setSelectedTileType] = useState<string>("");
+  const playSession = usePlaySession(unlockedAchievements);
+  const canDraw = playSession.inPlay.length < 3;
+  const canDrawForest = canDraw && playSession.decks.forest.length > 0;
+  const canDrawGrain = canDraw && playSession.decks.grain.length > 0;
+  const canDrawCity = canDraw && playSession.decks.city.length > 0;
+  const canDrawRailroad = canDraw && playSession.decks.railroad.length > 0;
+  const canDrawRiver = canDraw && playSession.decks.river.length > 0;
 
-  useEffect(() => {
-    loadSessionData();
-  }, [sessionId]);
-
-  const loadSessionData = async () => {
-    try {
-      setLoading(true);
-      const sessionData = null;
-      if (sessionData) {
-        setSession(sessionData);
-        setTilesInPlay([]);
-        setTilePools([]);
-      }
-    } catch (error) {
-      console.error('Failed to load session:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const completeTile = async (tileId: string) => {
-    try {
-      // await taskTileService.completeTile(tileId);
-      
-      // Auto-draw new tiles to maintain 3 in play
-      // const newTiles = await taskTileService.autoDrawTiles(sessionId as string);
-      
-      // Reload data
-      await loadSessionData();
-      
-      show({
-        render: () => (
-          <Toast>
-            <ToastTitle>Tile completed!</ToastTitle>
-          </Toast>
-        ),
-      });
-    } catch (error) {
-      console.error('Failed to complete tile:', error);
-      show({
-        render: () => (
-          <Toast>
-            <ToastTitle>Failed to complete tile</ToastTitle>
-          </Toast>
-        ),
-      });
-    }
-  };
-
-  const revealTile = async () => {
-    if (!selectedTileType) {
-      Alert.alert('Please select a tile type');
-      return;
-    }
-
-    try {
-      // Check if we can draw more tiles
-      const canDraw = false;
-      if (!canDraw) {
-        Alert.alert('Cannot draw more tiles', 'You already have 3 tiles in play or no tiles available');
-        return;
-      }
-
-      // For special 7-value tiles, ask for confirmation
-      const availablePoolsForType = tilePools.filter(pool => 
-        pool.type === selectedTileType && pool.value === 7 && pool.remainingCount > 0
-      );
-      
-      if (availablePoolsForType.length > 0) {
-        Alert.alert(
-          'Special 7 Tile Available',
-          `You have a special ${selectedTileType} 7-tile available. Do you want to draw it?`,
-          [
-            { 
-              text: 'Draw 7-tile', 
-              onPress: () => drawSpecificTile(selectedTileType, 7) 
-            },
-            { 
-              text: 'Draw Random', 
-              onPress: () => drawRandomTile(selectedTileType) 
-            },
-            { text: 'Cancel' }
-          ]
-        );
-      } else {
-        await drawRandomTile(selectedTileType);
-      }
-      
-    } catch (error) {
-      console.error('Failed to reveal tile:', error);
-      show({
-        render: () => (
-          <Toast>
-            <ToastTitle>Failed to reveal tile</ToastTitle>
-          </Toast>
-        ),
-      });
-    }
-  };
-
-  const drawSpecificTile = async (type: string, value: number) => {
-    try {
-      // await tilePoolService.drawTile(sessionId as string, type as any, value as any);
-      await loadSessionData();
-      setSelectedTileType('');
-      
-      show({
-        render: () => (
-          <Toast>
-            <ToastTitle>Tile revealed!</ToastTitle>
-          </Toast>
-        ),
-      });
-    } catch (error) {
-      console.error('Failed to draw tile:', error);
-      show({
-        render: () => (
-          <Toast>
-            <ToastTitle>Failed to draw tile</ToastTitle>
-          </Toast>
-        ),
-      });
-    }
-  };
-
-  const drawRandomTile = async (type: string) => {
-    try {
-      // await tilePoolService.getRandomAvailableTile(sessionId as string, type as any);
-      await loadSessionData();
-      setSelectedTileType('');
-      
-      show({
-        render: () => (
-          <Toast>
-            <ToastTitle>Tile revealed!</ToastTitle>
-          </Toast>
-        ),
-      });
-    } catch (error) {
-      console.error('Failed to draw tile:', error);
-      show({
-        render: () => (
-          <Toast>
-            <ToastTitle>Failed to draw tile</ToastTitle>
-          </Toast>
-        ),
-      });
-    }
-  };
-
-  const getAvailableTypes = () => {
-    const typesWithTiles = new Set(
-      tilePools.filter(pool => pool.remainingCount > 0).map(pool => pool.type)
-    );
-    return Array.from(typesWithTiles);
-  };
-
-  const getRemainingTileCount = () => {
-    return tilePools.reduce((sum, pool) => sum + pool.remainingCount, 0);
-  };
-
-  if (loading) {
+  if (achievementsLoading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" />
-      </View>
+      <VStack className="flex-1 items-center justify-center p-4">
+        <ActivityIndicator size="large" color="#2563eb" />
+        <Text className="mt-4">Loading game session...</Text>
+      </VStack>
     );
   }
-
-  if (!session) {
-    return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-red-500">Session not found</Text>
-      </View>
-    );
-  }
-
-  const availableTypes = getAvailableTypes();
-  const remainingTiles = getRemainingTileCount();
-
+  
   return (
-    <VStack className="flex-1 p-4">
-      <Card className="mb-4">
-        <Heading>Session {session.index}</Heading>
-        <Text className="text-neutral-500">
-          Players: {session.players?.map((p: any) => p.name).join(', ')}
-        </Text>
-        <Text className="text-neutral-500">
-          Remaining tiles: {remainingTiles}
-        </Text>
-      </Card>
-
-      <Card className="mb-4">
-        <Heading>Tiles In Play ({tilesInPlay.length}/3)</Heading>
-        {tilesInPlay.length === 0 ? (
-          <Text className="text-neutral-500">No tiles in play. Reveal some tiles to start!</Text>
-        ) : (
-          <FlatList
-            data={tilesInPlay}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View className="flex-row justify-between items-center py-2 border-b border-gray-200">
-                <Text className="font-semibold">
-                  {item.type.charAt(0).toUpperCase() + item.type.slice(1)} {item.value}
-                </Text>
-                <Button
-                  size="sm"
-                  onPress={() => completeTile(item.id)}
-                >
-                  <ButtonText>Complete</ButtonText>
-                </Button>
-              </View>
-            )}
-          />
-        )}
-      </Card>
-
-      {availableTypes.length > 0 && tilesInPlay.length < 3 && (
+    <ScrollView>
+      <VStack className="flex-1 p-4">
+        <Heading>Play Session</Heading>
+        
         <Card className="mb-4">
-          <Heading>Reveal New Tile</Heading>
-          <Select 
-            onValueChange={setSelectedTileType} 
-            placeholder="Select tile type to reveal"
-          >
-            {availableTypes.map(type => (
-              <SelectItem 
-                key={type} 
-                value={type} 
-                label={type.charAt(0).toUpperCase() + type.slice(1)} 
-              />
-            ))}
-          </Select>
-          {selectedTileType && (
-            <Button onPress={revealTile} className="mt-2">
-              <ButtonText>Reveal {selectedTileType} Tile</ButtonText>
-            </Button>
-          )}
-        </Card>
-      )}
-
-      {remainingTiles === 0 && tilesInPlay.length === 0 && (
-        <Card className="mb-4">
-          <Text className="text-center text-green-600 font-semibold">
-            All tiles completed! Session ready to score.
+          <Heading size="md" className="mb-2">Active Achievements</Heading>
+          <Text variant="caption">
+            Unlocked: {unlockedAchievements.length} achievements
           </Text>
         </Card>
-      )}
 
-      <Button 
-        onPress={() => router.navigate(ROUTES.SCORE.replace('[sessionId]', sessionId as string))}
-        variant={remainingTiles === 0 && tilesInPlay.length === 0 ? "solid" : "outline"}
-      >
-        <ButtonText>
-          {remainingTiles === 0 && tilesInPlay.length === 0 ? "Score Session" : "End Session Early"}
-        </ButtonText>
-      </Button>
-    </VStack>
+        <Card className="mb-4">
+          <Heading size="md" className="mb-3">Draw Tiles</Heading>
+          <HStack space="sm" wrap={true}>
+            <Button 
+              disabled={!canDrawForest} 
+              onPress={playSession.drawForest}
+              size="sm"
+            >
+              Forest ({playSession.decks.forest.length})
+            </Button>
+            <Button 
+              disabled={!canDrawGrain} 
+              onPress={playSession.drawGrain}
+              size="sm"
+            >
+              Grain ({playSession.decks.grain.length})
+            </Button>
+            <Button 
+              disabled={!canDrawCity} 
+              onPress={playSession.drawCity}
+              size="sm"
+            >
+              City ({playSession.decks.city.length})
+            </Button>
+            <Button 
+              disabled={!canDrawRailroad} 
+              onPress={playSession.drawRailroad}
+              size="sm"
+            >
+              Railroad ({playSession.decks.railroad.length})
+            </Button>
+            <Button 
+              disabled={!canDrawRiver} 
+              onPress={playSession.drawRiver}
+              size="sm"
+            >
+              River ({playSession.decks.river.length})
+            </Button>
+          </HStack>
+        </Card>
+
+        <Card className="mb-4">
+          <Heading size="md" className="mb-3">In Play ({playSession.inPlay.length}/3)</Heading>
+          <HStack space="sm" wrap={true}>
+            {playSession.inPlay.map((inPlayTile) => (
+              <Button 
+                key={inPlayTile.id} 
+                onPress={() => playSession.completeTile(inPlayTile)}
+                variant="outline"
+                size="sm"
+              >
+                {inPlayTile.type} - {inPlayTile.value}
+              </Button>
+            ))}
+          </HStack>
+          {playSession.inPlay.length === 0 && (
+            <Text variant="caption" className="text-center py-4">
+              No tiles in play. Draw some tiles to get started!
+            </Text>
+          )}
+        </Card>
+
+        <Card>
+          <Heading size="md" className="mb-3">Completed Tiles ({playSession.completed.length})</Heading>
+          <HStack space="sm" wrap={true}>
+            {playSession.completed.map((completedTile) => (
+              <Card key={completedTile.id} variant="outline" size="sm">
+                <Text size="sm">
+                  {completedTile.type} - {completedTile.value}
+                </Text>
+              </Card>
+            ))}
+          </HStack>
+          {playSession.completed.length === 0 && (
+            <Text variant="caption" className="text-center py-4">
+              No completed tiles yet.
+            </Text>
+          )}
+        </Card>
+      </VStack>
+    </ScrollView>
   );
 }

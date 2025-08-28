@@ -1,84 +1,58 @@
-import { Button, ButtonText } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Heading } from "@/components/ui/heading";
-import { Pressable } from "@/components/ui/pressable";
-import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
-import { Campaign } from "@/models/campaign";
-import { useRouter } from "expo-router";
-import { DateTime } from "luxon";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
-import { ROUTES } from "../models/route";
+import Button from '@/components/ui/button';
+import Card from '@/components/ui/card';
+import Checkbox from '@/components/ui/checkbox';
+import { Heading } from '@/components/ui/heading';
+import Text from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { useAchievements } from '@/hooks/useAchievements';
+import { ACHIEVEMENT_KEY } from '@/models/achievement';
+import { useRouter } from 'expo-router';
+import { ActivityIndicator, ScrollView } from 'react-native';
 
 export default function CampaignList() {
   const router = useRouter();
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { allAchievements, isUnlocked, unlock, lock, isLoading } = useAchievements();
 
-  useEffect(() => {
-    loadCampaigns();
-  }, []);
+  const onAchievementCheckedChanged = (achievementId: ACHIEVEMENT_KEY) => (checked: boolean) =>
+    checked ? unlock(achievementId) : lock(achievementId);
 
-  const loadCampaigns = async () => {
-    try {
-      setLoading(true);
-      setCampaigns([]);
-    } catch (error) {
-      console.error("Failed to load campaigns:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" />
-      </View>
+      <VStack className="flex-1 items-center justify-center p-4">
+        <ActivityIndicator size="large" color="#2563eb" />
+        <Text className="mt-4">Loading achievements...</Text>
+      </VStack>
     );
   }
 
   return (
-    <VStack className="flex-1 p-4">
-      <Button onPress={() => router.navigate(ROUTES.NEW)}>
-        <ButtonText>Start Campaign</ButtonText>
-      </Button>
-
-      <FlatList
-        data={campaigns}
-        ListEmptyComponent={
-          <View className="flex-1 justify-center items-center">
-            <Text className="text-neutral-500 text-center">
-              No campaigns yet. Create your first campaign to get started!
-            </Text>
-          </View>
-        }
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Pressable
-            onPress={() =>
-              router.navigate(
-                ROUTES.DETAILS.replace("[campaignId]", `${item.id}`)
-              )
-            }
-          >
-            <Card className="mt-4">
-              <Heading>{item.name}</Heading>
-              <Text className="text-neutral-500">
-                Started{" "}
-                {DateTime.fromJSDate(item.startDate).toFormat("MMM dd, yyyy")}
-              </Text>
-              {item.endDate && (
-                <Text className="text-neutral-500">
-                  Ended{" "}
-                  {DateTime.fromJSDate(item.endDate!).toFormat("MMM dd, yyyy")}
-                </Text>
-              )}
-            </Card>
-          </Pressable>
-        )}
-      />
-    </VStack>
+    <ScrollView>
+      <VStack className="flex-1 p-4">
+        <Heading>DorfRomantik Board Game Helper</Heading>
+        <Button onPress={() => router.navigate('/session/new/play')} disabled={isLoading}>
+          Play Game
+        </Button>
+        <Card className='mb-4'>
+          <Heading size="md" className="mb-4">
+            Achievements
+          </Heading>
+          <Text variant="caption" className="mb-3">
+            Unlocked: {allAchievements.filter((a) => a.unlockedAt).length} /{' '}
+            {allAchievements.length}
+          </Text>
+          <VStack space="sm">
+            {allAchievements.map((achievement) => (
+              <Checkbox
+                key={achievement.id}
+                label={achievement?.name}
+                defaultChecked={isUnlocked(achievement.id)}
+                onCheckedChange={onAchievementCheckedChanged(achievement.id)}
+                disabled={isLoading}
+              />
+            ))}
+          </VStack>
+        </Card>
+      </VStack>
+    </ScrollView>
   );
 }

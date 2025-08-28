@@ -34,6 +34,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `AchievementList.tsx` - Display and manage achievements
     - `AchievementSection.tsx` - Achievement UI components
     - `SessionCard.tsx` - Session display components
+  - Enhanced achievement management system:
+    - `useAchievements` hook with AsyncStorage persistence for unlock/lock state
+    - Automatic saving/loading of unlocked achievements across app sessions
+    - Functions to unlock, lock, and check achievement status
+    - Separation of all achievements vs unlocked achievements data
+    - Loading states for async operations with proper UI feedback
+    - Integrated achievement system into main app screens:
+      - Home screen displays all achievements with interactive checkboxes for manual unlock/lock
+      - Play session screen integrates with game mechanics and shows unlocked achievements
+      - Achievement progress counter and visual feedback throughout the app
+      - Persistent achievement state across app restarts and sessions
+  - Updated app screens with modern UI and improved user experience:
+    - Complete redesign of home screen with achievement management interface
+    - Enhanced play session screen with tile deck counters and game state visualization
+    - Responsive layouts using custom HStack/VStack components with proper wrapping
+    - Loading states and disabled interactions during async operations
 
 ### Changed
 - **BREAKING: Replaced GlueStack UI with Custom UI Components**
@@ -45,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `Text` - Typography component with size, weight, and variant options
     - `Heading` - Header text component with multiple size options
     - `VStack` - Vertical layout component with configurable spacing and direction
-    - `HStack` - Horizontal layout component with configurable spacing and direction
+    - `HStack` - Horizontal layout component with configurable spacing, direction, and wrapping
+    - `Checkbox` - Interactive checkbox with label support, variants, and size options
     - `Select` - Dropdown component with modal-based option selection
     - `Avatar` - Profile image component with fallback text and multiple sizes
     - `Toast` - Toast notification system with provider pattern and variant support
@@ -53,6 +70,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed GlueStack UI dependencies and related configuration files
   - All components use NativeWind for styling with consistent design system
   - Maintained TypeScript interfaces for type safety and developer experience
+- **Enhanced Data Models**
+  - Added `id` field to `TaskTile` model for proper tile tracking and state management
+  - Improved task tile value constraints with proper TypeScript typing
+  - Centralized array utility functions for reusable game logic
 - **BREAKING: Complete migration from React Native CLI to Expo** 
   - Migrated from React Native 0.80.2 to Expo SDK 53 with React Native 0.79.5
   - Updated package.json dependencies to use Expo-managed packages
@@ -78,6 +99,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Configured environment variable support with DARK_MODE=media
 
 ### Added
+- **Game Session Management System**
+  - `usePlaySession` hook for managing active game sessions with tile drawing and completion
+  - `useTaskTiles` hook for achievement-based tile deck generation
+  - Dynamic tile deck system where achievements unlock additional high-value (7) tiles
+  - Achievement-driven gameplay: Farm, Castle, and Deer achievements unlock extended tile sets
+  - Tile state management with proper game flow (draw → in-play → complete)
+  - 3-tiles-in-play rule enforcement with proper error handling
+  - Fisher-Yates shuffle algorithm implementation in `models/array.ts`
+- **Enhanced UI Components**
+  - `Checkbox` component with controlled/uncontrolled state management
+  - `HStack` component with wrapping support for responsive layouts
+  - Complete custom UI component library replacing GlueStack dependencies
 - **Complete Dorfromantik Boardgame Helper Implementation**
   - Comprehensive database schema for campaigns, players, sessions, tiles, and scores
   - Database migration and initialization system
