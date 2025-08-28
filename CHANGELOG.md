@@ -53,6 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Improved navigation with proper Stack.Screen integration and page titles
     - Standardized screen wrapper pattern for consistent navigation headers
     - Cleaner code organization and formatting improvements
+  - Refactored game session hooks for better maintainability and performance:
+    - Simplified `usePlaySession` API - no longer requires achievements parameter
+    - Created focused `useGameState` hook for tile state management
+    - Replaced `useTaskTiles` with more efficient `useTileDecks` hook
+    - Automatic deck updates when achievements change during gameplay
+    - Better separation of concerns with single-responsibility hooks
 
 ### Changed
 - **BREAKING: Replaced GlueStack UI with Custom UI Components**
@@ -83,6 +89,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added `id` field to `TaskTile` model for proper tile tracking and state management
   - Improved task tile value constraints with proper TypeScript typing
   - Centralized array utility functions for reusable game logic
+- **App Configuration Updates**
+  - Updated app display name to "Dorfromantik The Board Game - Helper" for better user recognition
 - **BREAKING: Complete migration from React Native CLI to Expo** 
   - Migrated from React Native 0.80.2 to Expo SDK 53 with React Native 0.79.5
   - Updated package.json dependencies to use Expo-managed packages
@@ -109,13 +117,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Game Session Management System**
-  - `usePlaySession` hook for managing active game sessions with tile drawing and completion
-  - `useTaskTiles` hook for achievement-based tile deck generation
+  - `usePlaySession` hook for managing complete game sessions with internal achievement loading
+  - `useTileDecks` hook for achievement-based tile deck generation and management
+  - `useGameState` hook for tile state management (in-play vs completed)
   - Dynamic tile deck system where achievements unlock additional high-value (7) tiles
   - Achievement-driven gameplay: Farm, Castle, and Deer achievements unlock extended tile sets
+  - Automatic deck updates when achievements are unlocked during gameplay
   - Tile state management with proper game flow (draw → in-play → complete)
   - 3-tiles-in-play rule enforcement with proper error handling
   - Fisher-Yates shuffle algorithm implementation in `models/array.ts`
+  - Simplified hook architecture with focused responsibilities and better code organization
 - **Enhanced UI Components**
   - `Checkbox` component with controlled/uncontrolled state management
   - `HStack` component with wrapping support for responsive layouts

@@ -1,52 +1,57 @@
-import { Achievement } from '@/models/achievement';
-import { shuffleArray } from '@/models/array';
-import { TaskTile, TILE_STATE, TILE_TYPE } from '@/models/task-tile';
-import { useState } from 'react';
-import { useTaskTiles } from './useTaskTiles';
+import { TILE_TYPE } from '@/models/task-tile';
+import { useCallback } from 'react';
+import { useAchievements } from './useAchievements';
+import { useGameState } from './useGameState';
+import { useTileDecks } from './useTileDecks';
 
-//grain, city, railroad, river, forest
-export const usePlaySession = (achievements: Achievement[]) => {
-  const { grains, cities, forests, railroads, rivers } = useTaskTiles(achievements);
-  const [tileId, setTileId] = useState(1);
-  const [inPlay, setInPlay] = useState<TaskTile[]>([]);
-  const [completed, setCompleted] = useState<TaskTile[]>([]);
-  const [grainDeck, setGrainDeck] = useState(shuffleArray(grains));
-  const [cityDeck, setCityDeck] = useState(shuffleArray(cities));
-  const [forestDeck, setForestDeck] = useState(shuffleArray(forests));
-  const [railroadDeck, setRailroadDeck] = useState(shuffleArray(railroads));
-  const [riverDeck, setRiverDeck] = useState(shuffleArray(rivers));
-  const drawTile =
-    (deck: (4 | 5 | 6 | 7)[], setDeck: React.Dispatch<(4 | 5 | 6 | 7)[]>, tileType: TILE_TYPE) =>
-    () => {
-      if (deck.length === 0) throw new Error('Tried to draw from an empty deck');
-      if (inPlay.length === 3) throw new Error('Tried to add more than 3 task tiles into play');
-      setInPlay([
-        ...inPlay,
-        { id: tileId, value: deck[0], state: TILE_STATE.INPLAY, type: tileType },
-      ]);
-      setDeck(deck.slice(1));
-      setTileId(tileId + 1);
-    };
-  return {
-    decks: {
-      grain: grainDeck,
-      city: cityDeck,
-      forest: forestDeck,
-      railroad: railroadDeck,
-      river: riverDeck,
+export function usePlaySession() {
+  const { unlockedAchievementIds, isLoading: achievementsLoading } = useAchievements();
+  const { decks, drawFromDeck } = useTileDecks(unlockedAchievementIds);
+  const { inPlay, completed, addTileToPlay, completeTile, canDrawTile } = useGameState();
+
+  const createTileDrawer = useCallback(
+    (tileType: TILE_TYPE) => () => {
+      if (!canDrawTile) {
+        throw new Error('Cannot draw more than 3 tiles into play');
+      }
+
+      const value = drawFromDeck(tileType);
+      if (value === null) {
+        throw new Error(`No more ${tileType} tiles available`);
+      }
+
+      addTileToPlay({ type: tileType, value });
     },
+    [canDrawTile, drawFromDeck, addTileToPlay]
+  );
+
+  const canDrawType = useCallback(
+    (tileType: TILE_TYPE) => canDrawTile && decks[tileType].length > 0,
+    [canDrawTile, decks]
+  );
+
+  return {
+    // Game state
     inPlay,
     completed,
-    drawGrain: drawTile(grainDeck, setGrainDeck, TILE_TYPE.GRAIN),
-    drawCity: drawTile(cityDeck, setCityDeck, TILE_TYPE.CITY),
-    drawForest: drawTile(forestDeck, setForestDeck, TILE_TYPE.FOREST),
-    drawRailroad: drawTile(railroadDeck, setRailroadDeck, TILE_TYPE.RAILROAD),
-    drawRiver: drawTile(riverDeck, setRiverDeck, TILE_TYPE.RIVER),
-    completeTile: (taskTile: TaskTile) => {
-      if (!inPlay.includes(taskTile))
-        throw new Error('You tried to complete a task tile that was not in play');
-      setInPlay(inPlay.filter((tile) => tile !== taskTile));
-      setCompleted([...completed, { ...taskTile, state: TILE_STATE.COMPLETE }]);
-    },
+    isLoading: achievementsLoading,
+
+    // Deck information
+    decks,
+
+    // Actions
+    drawGrain: createTileDrawer(TILE_TYPE.GRAIN),
+    drawCity: createTileDrawer(TILE_TYPE.CITY),
+    drawForest: createTileDrawer(TILE_TYPE.FOREST),
+    drawRailroad: createTileDrawer(TILE_TYPE.RAILROAD),
+    drawRiver: createTileDrawer(TILE_TYPE.RIVER),
+    completeTile,
+
+    // Computed state
+    canDrawGrain: canDrawType(TILE_TYPE.GRAIN),
+    canDrawCity: canDrawType(TILE_TYPE.CITY),
+    canDrawForest: canDrawType(TILE_TYPE.FOREST),
+    canDrawRailroad: canDrawType(TILE_TYPE.RAILROAD),
+    canDrawRiver: canDrawType(TILE_TYPE.RIVER),
   };
-};
+}
