@@ -68,6 +68,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `Toast` - Toast notification system with provider pattern and variant support
   - Updated `FormInput` component to work with custom Input and Text components
   - Removed GlueStack UI dependencies and related configuration files
+  - Cleaned up unused legacy components and screens:
+    - Removed `ThemedText` and `ThemedView` components (replaced with custom Text components)
+    - Removed unused campaign and session management screens (`campaign/[campaignId]`, `campaign/create`, `session/[sessionId]/edit`, `session/[sessionId]/score`)
+    - Removed legacy shared components (`AchievementList`, `AchievementSection`, `SessionCard`, `Collapsible`, `ExternalLink`, `HapticTab`, `HelloWave`, `ParallaxScrollView`)
+    - Removed unused `constants/Colors.ts` (colors now handled via NativeWind classes)
+    - Updated 404 not-found page to use custom UI components
   - All components use NativeWind for styling with consistent design system
   - Maintained TypeScript interfaces for type safety and developer experience
 - **Enhanced Data Models**
